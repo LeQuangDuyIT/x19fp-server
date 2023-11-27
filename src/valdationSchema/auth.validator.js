@@ -1,6 +1,8 @@
 import * as yup from 'yup';
 
 const signupSchema = yup.object().shape({
+  firstName: yup.string().required(),
+  lastName: yup.string().required(),
   email: yup.string().email().required(),
   password: yup
     .string()
@@ -9,10 +11,9 @@ const signupSchema = yup.object().shape({
       'Password must contain at least one number and one special character'
     )
     .min(8, 'Password must be at least 8 characters long'),
-  firstName: yup.string().required(),
-  lastName: yup.string().required(),
   phoneNumber: yup.string().required(),
-  gender: yup.string().nullable().optional()
+  gender: yup.string().oneOf(['Nam', 'Nữ', 'khác'], 'Thông tin không hợp lệ'),
+  accountType: yup.string().oneOf(['Giảng viên', 'Học viên'], 'Thông tin không hợp lệ')
 });
 
 const loginSchema = yup.object().shape({

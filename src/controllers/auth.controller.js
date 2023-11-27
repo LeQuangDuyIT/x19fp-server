@@ -5,7 +5,7 @@ import { ObjectId } from 'mongodb';
 import { db } from '../config/database.js';
 
 const signup = asyncHandler(async (req, res) => {
-  const { email, password, firstName, lastName, phoneNumber, gender } = req.body;
+  const { email, password, firstName, lastName, phoneNumber, gender, accountType } = req.body;
 
   // 1. Check duplicate
   const existingUser = await db.users.findOne({ email });
@@ -25,6 +25,7 @@ const signup = asyncHandler(async (req, res) => {
     lastName,
     phoneNumber,
     gender,
+    accountType,
     likes: [],
     password: hashedPassword,
     createdAt: new Date(),
@@ -49,7 +50,7 @@ const signup = asyncHandler(async (req, res) => {
 
 const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body || {};
-
+  console.log('user', email, password);
   // 1. Check email
   const existingUser = await db.users.findOne({ email });
   if (!existingUser) {
@@ -71,7 +72,7 @@ const login = asyncHandler(async (req, res) => {
     email: existingUser.email,
     fullname: existingUser.firstName + existingUser.lastName
   };
-
+  console.log('payload', payload);
   const SECRET_KEY = process.env.SECRET_KEY;
 
   const token = jwt.sign(payload, SECRET_KEY, {
