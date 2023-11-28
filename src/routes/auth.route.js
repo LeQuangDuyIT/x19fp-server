@@ -11,5 +11,5 @@ const router = express.Router();
 router.post('/login', validateMdw(AuthValidator.loginSchema), AuthController.login);
 router.post('/signup', validateMdw(AuthValidator.signupSchema), AuthController.signup);
 router.get('/current-user', authMiddleware, AuthController.fetchCurrentUser);
-router.post('/verifyMail', sendVerifyMail);
+router.post('/verify-mail', sendVerifyMail);
 export default router;
