@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import asyncHandler from 'express-async-handler';
 import { ObjectId } from 'mongodb';
 import { db } from '../config/database.js';
-
+import { OAuth2Client } from 'google-auth-library';
 const signup = asyncHandler(async (req, res) => {
   const { email, password, firstName, lastName, phoneNumber, gender, accountType } = req.body;
 
@@ -86,6 +86,21 @@ const login = asyncHandler(async (req, res) => {
   });
 });
 
+const verifyGoogleAccount = asyncHandler(async (req, res) => {
+  const { clientId, credential } = req.body;
+  const client = new OAuth2Client();
+  const verifyToken = await client.verifyIdToken({
+    idToken: credential,
+    audience: clientId
+  });
+  console.log('verifyToken', verifyToken);
+  const payload = verifyToken.getPayload();
+  console.log('payload', payload);
+  res.status(200).json({
+    payload
+  });
+});
+
 const fetchCurrentUser = asyncHandler(async (req, res) => {
   const userId = req.user.id;
 
@@ -109,6 +124,7 @@ const fetchCurrentUser = asyncHandler(async (req, res) => {
 const AuthController = {
   signup,
   login,
+  verifyGoogleAccount,
   fetchCurrentUser
 };
 
