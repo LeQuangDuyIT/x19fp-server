@@ -72,7 +72,6 @@ const login = asyncHandler(async (req, res) => {
     email: existingUser.email,
     fullname: existingUser.firstName + existingUser.lastName
   };
-  console.log('payload', payload);
   const SECRET_KEY = process.env.SECRET_KEY;
 
   const token = jwt.sign(payload, SECRET_KEY, {
@@ -93,11 +92,40 @@ const verifyGoogleAccount = asyncHandler(async (req, res) => {
     idToken: credential,
     audience: clientId
   });
-  console.log('verifyToken', verifyToken);
-  const payload = verifyToken.getPayload();
-  console.log('payload', payload);
+  const googlePayload = verifyToken.getPayload();
+  const { email, picture, given_name, family_name } = googlePayload;
+  const existingUser = await db.users.findOne({ email });
+  if (existingUser) {
+    console.log('user exits');
+  } else {
+    const newUser = {
+      email,
+      firstName: given_name,
+      lastName: family_name,
+      picture,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    await db.users.insertOne(newUser);
+    console.log('no user');
+  }
+  const user = await db.users.findOne({ email });
+  console.log(user);
+  const payload = {
+    id: user._id,
+    email: user.email,
+    fullname: user.firstName + user.lastName
+  };
+  console.log(payload);
+  const SECRET_KEY = process.env.SECRET_KEY;
+
+  const token = jwt.sign(payload, SECRET_KEY, {
+    expiresIn: process.env.JWT_EXPIRES_TIME
+  });
+
   res.status(200).json({
-    payload
+    message: 'login successfully',
+    accessToken: token
   });
 });
 
