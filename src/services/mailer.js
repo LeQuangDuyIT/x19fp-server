@@ -17,7 +17,7 @@ const sendVerificationMail = async receiverMail => {
     from: `x19fp,<${adminUser}>`,
     to: receiverMail,
     subject: 'Sign Up Verification ',
-    html: `<p>Hello ${receiverMail}, this is your verification code : <b> ${verificationCode}</b> </p>` // html body
+    html: `<p>Xin chào, ${receiverMail}, Đây là mã xác nhận của bạn: <b> ${verificationCode}</b> </p> <p>  Lưu ý mã xác nhận sẽ hết hạn sau <b> 3 phút </b> </p> ` // html body
   };
   const response = await transporter.sendMail(options);
   return { message: response.response, code: verificationCode };
