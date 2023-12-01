@@ -12,7 +12,7 @@ const PORT = process.env.PORT;
 connectToDatabase();
 
 app.use(express.json());
-app.use(cors('*'));
+app.use(cors({ origin: ['https://x19fp-client.onrender.com', 'http://localhost:5173'] }));
 
 app.use(apiLoggerMiddleware);
 
