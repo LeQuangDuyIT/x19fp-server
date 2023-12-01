@@ -3,12 +3,14 @@ import { ObjectId } from 'mongodb';
 import { db } from '../config/database.js';
 
 const createMultipleChoice = asyncHandler(async (req, res) => {
-  // const { user } = req.user;
+  const user = req.user;
   const { topic, type, answers } = req.body;
+
+  console.log(user);
 
   const newQuestion = {
     _id: new ObjectId(),
-    // user,
+    user,
     topic,
     answers,
     type,

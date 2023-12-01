@@ -4,6 +4,7 @@ import asyncHandler from 'express-async-handler';
 import { ObjectId } from 'mongodb';
 import { db } from '../config/database.js';
 import { OAuth2Client } from 'google-auth-library';
+
 const signup = asyncHandler(async (req, res) => {
   const { email, password, firstName, lastName, phoneNumber, gender, accountType } = req.body;
 
