@@ -3,9 +3,9 @@ import bcrypt from 'bcryptjs';
 import asyncHandler from 'express-async-handler';
 import { ObjectId } from 'mongodb';
 import { db } from '../config/database.js';
-
+import { OAuth2Client } from 'google-auth-library';
 const signup = asyncHandler(async (req, res) => {
-  const { email, password, firstName, lastName, phoneNumber, gender } = req.body;
+  const { email, password, firstName, lastName, phoneNumber, gender, accountType } = req.body;
 
   // 1. Check duplicate
   const existingUser = await db.users.findOne({ email });
@@ -25,6 +25,7 @@ const signup = asyncHandler(async (req, res) => {
     lastName,
     phoneNumber,
     gender,
+    accountType,
     likes: [],
     password: hashedPassword,
     createdAt: new Date(),
@@ -49,7 +50,7 @@ const signup = asyncHandler(async (req, res) => {
 
 const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body || {};
-
+  console.log('user', email, password);
   // 1. Check email
   const existingUser = await db.users.findOne({ email });
   if (!existingUser) {
@@ -71,7 +72,6 @@ const login = asyncHandler(async (req, res) => {
     email: existingUser.email,
     fullname: existingUser.firstName + existingUser.lastName
   };
-
   const SECRET_KEY = process.env.SECRET_KEY;
 
   const token = jwt.sign(payload, SECRET_KEY, {
@@ -81,6 +81,50 @@ const login = asyncHandler(async (req, res) => {
   //  4. Response
   res.json({
     message: 'Login successfully',
+    accessToken: token
+  });
+});
+
+const verifyGoogleAccount = asyncHandler(async (req, res) => {
+  const { clientId, credential } = req.body;
+  const client = new OAuth2Client();
+  const verifyToken = await client.verifyIdToken({
+    idToken: credential,
+    audience: clientId
+  });
+  const googlePayload = verifyToken.getPayload();
+  const { email, picture, given_name, family_name } = googlePayload;
+  const existingUser = await db.users.findOne({ email });
+  if (existingUser) {
+    console.log('user exits');
+  } else {
+    const newUser = {
+      email,
+      firstName: given_name,
+      lastName: family_name,
+      picture,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    await db.users.insertOne(newUser);
+    console.log('no user');
+  }
+  const user = await db.users.findOne({ email });
+  console.log(user);
+  const payload = {
+    id: user._id,
+    email: user.email,
+    fullname: user.firstName + user.lastName
+  };
+  console.log(payload);
+  const SECRET_KEY = process.env.SECRET_KEY;
+
+  const token = jwt.sign(payload, SECRET_KEY, {
+    expiresIn: process.env.JWT_EXPIRES_TIME
+  });
+
+  res.status(200).json({
+    message: 'login successfully',
     accessToken: token
   });
 });
@@ -108,6 +152,7 @@ const fetchCurrentUser = asyncHandler(async (req, res) => {
 const AuthController = {
   signup,
   login,
+  verifyGoogleAccount,
   fetchCurrentUser
 };
 
