@@ -6,11 +6,9 @@ const createMultipleChoice = asyncHandler(async (req, res) => {
   const user = req.user;
   const { topic, type, answers } = req.body;
 
-  console.log(user);
-
   const newQuestion = {
     _id: new ObjectId(),
-    user,
+    userId: user.id,
     topic,
     answers,
     type,
@@ -36,9 +34,18 @@ const getQuestionById = asyncHandler(async (req, res) => {
   res.json({ data: existingQuestion });
 });
 
+const getMyQuestions = asyncHandler(async (req, res) => {
+  const user = req.user;
+
+  const questions = await db.questions.find({ userId: user.id }).toArray();
+
+  res.json({ data: questions });
+});
+
 const QuestionController = {
   createMultipleChoice,
-  getQuestionById
+  getQuestionById,
+  getMyQuestions
 };
 
 export default QuestionController;

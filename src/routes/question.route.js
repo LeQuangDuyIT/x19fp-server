@@ -13,6 +13,9 @@ router.post(
   QuestionController.createMultipleChoice
 );
 
+router.get('/mine', authMiddleware, QuestionController.getMyQuestions);
+
 router.get('/:id', QuestionController.getQuestionById);
+
 
 export default router;
