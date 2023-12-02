@@ -4,14 +4,26 @@ import { db } from '../config/database.js';
 
 const createMultipleChoice = asyncHandler(async (req, res) => {
   const user = req.user;
-  const { topic, type, answers } = req.body;
+  const { topic, type, answers, subject, collection: collectionId, isPrivate } = req.body;
+
+  let collection = {};
+  if (collectionId) {
+    const existingCollection = await db.collections.findOne({ _id: new ObjectId(collectionId) });
+    const isColectionValid = existingCollection?.userId === user.id;
+    if (existingCollection && isColectionValid) {
+      collection = { id: collectionId, name: existingCollection.name };
+    }
+  }
 
   const newQuestion = {
     _id: new ObjectId(),
     userId: user.id,
+    type,
     topic,
     answers,
-    type,
+    subject,
+    collection,
+    isPrivate,
     createdAt: new Date(),
     updatedAt: new Date()
   };

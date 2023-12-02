@@ -6,15 +6,17 @@ const multipleChoiceAnswerSchema = yup.object().shape({
   isCorrect: yup.boolean().required()
 });
 
-const createMultipleChoiceSchema = yup.object().shape({
+const createQuestionSchema = yup.object().shape({
   topic: yup.string().required(),
-  answers: yup.array().of(multipleChoiceAnswerSchema).min(2).required(),
+  answers: yup.array().of(multipleChoiceAnswerSchema).min(2).optional(),
+  type: yup.string().required(),
   subject: yup.string().required(),
-  type: yup.string().required()
+  collection: yup.mixed().nullable().required(),
+  isPrivate: yup.boolean().required()
 });
 
 const QuestionValidator = {
-  createMultipleChoiceSchema
+  createQuestionSchema
 };
 
 export default QuestionValidator;

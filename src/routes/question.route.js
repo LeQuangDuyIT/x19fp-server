@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.post(
   '/choice',
-  validateMdw(QuestionValidator.createMultipleChoiceSchema),
+  validateMdw(QuestionValidator.createQuestionSchema),
   authMiddleware,
   QuestionController.createMultipleChoice
 );
@@ -16,6 +16,5 @@ router.post(
 router.get('/mine', authMiddleware, QuestionController.getMyQuestions);
 
 router.get('/:id', QuestionController.getQuestionById);
-
 
 export default router;
