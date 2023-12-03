@@ -103,7 +103,7 @@ const verifyGoogleAccount = asyncHandler(async (req, res) => {
       email,
       firstName: given_name,
       lastName: family_name,
-      picture,
+      picture: existingUser.picture ?? picture,
       createdAt: new Date(),
       updatedAt: new Date()
     };

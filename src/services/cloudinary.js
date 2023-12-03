@@ -18,7 +18,7 @@ const updateSingleFile = (filePath, folder = 'x19fp') => {
           reject(error);
           throw new error();
         } else {
-          fs.unlinkSync(folder);
+          fs.unlinkSync(filePath);
           resolve({
             url: result.secure_url,
             id: result.public_id
@@ -56,3 +56,4 @@ const cloudinaryService = {
   updateSingleFile,
   deleteSingleFile
 };
+export default cloudinaryService;

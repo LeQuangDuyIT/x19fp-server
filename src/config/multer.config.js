@@ -6,9 +6,10 @@ if (!fs.existsSync('uploadImage')) {
 }
 const multerStorageConfig = multer.diskStorage({
   destination: (req, file, cb) => {
-    cd(null, 'uploadImage/');
+    cb(null, 'uploadImage/');
   },
   filename: (req, file, cb) => {
+    console.log('multer', file);
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
     const fileExtension = file.originalname.split('.').pop();
     const filename = `${file.originalname}-${uniqueSuffix}.${fileExtension}`;
