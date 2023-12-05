@@ -7,5 +7,6 @@ const router = express.Router();
 router.post('/', authMiddleware, TestController.create);
 router.get('/:id', TestController.getTestById);
 router.put('/:id', authMiddleware, TestController.updateTest);
+router.delete('/:id', authMiddleware, TestController.deleteTestById);
 
 export default router;

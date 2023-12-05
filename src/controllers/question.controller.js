@@ -84,11 +84,26 @@ const getMyQuestions = asyncHandler(async (req, res) => {
   res.json({ data: questions });
 });
 
+const deleteQuestionById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const existingQuestion = await db.questions.findOne({ _id: new ObjectId(id) });
+  if (!existingQuestion) {
+    res.status(400);
+    throw new Error('Không tìm thấy câu hỏi');
+  }
+
+  await db.questions.deleteOne({ _id: new ObjectId(id) });
+
+  res.json({ message: 'Xóa thành công', isDeleted: true });
+});
+
 const QuestionController = {
   createMultipleChoice,
   initalQuestion,
   getQuestionById,
-  getMyQuestions
+  getMyQuestions,
+  deleteQuestionById
 };
 
 export default QuestionController;

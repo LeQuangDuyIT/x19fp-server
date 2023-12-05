@@ -19,4 +19,6 @@ router.get('/mine', authMiddleware, QuestionController.getMyQuestions);
 
 router.get('/:id', QuestionController.getQuestionById);
 
+router.delete('/:id', authMiddleware, QuestionController.deleteQuestionById);
+
 export default router;

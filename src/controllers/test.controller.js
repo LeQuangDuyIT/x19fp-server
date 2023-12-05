@@ -90,10 +90,28 @@ const updateTest = asyncHandler(async (req, res) => {
   res.json({ message: 'Update dish successfully', data: updatedFields, isSuccess: true });
 });
 
+const deleteTestById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const existingTest = await db.tests.findOne({ _id: new ObjectId(id) });
+  if (!existingTest) {
+    res.status(400);
+    throw new Error('Không tìm thấy đề');
+  }
+
+  await db.tests.deleteOne({ _id: new ObjectId(id) });
+
+  const ObjectIdArray = existingTest.questions.map(id => new ObjectId(id));
+  await db.questions.deleteMany({ _id: { $in: ObjectIdArray } });
+
+  res.json({ message: 'Xóa thành công', isDeleted: true });
+});
+
 const TestController = {
   create,
   getTestById,
-  updateTest
+  updateTest,
+  deleteTestById
 };
 
 export default TestController;
