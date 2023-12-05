@@ -96,28 +96,26 @@ const verifyGoogleAccount = asyncHandler(async (req, res) => {
   const googlePayload = verifyToken.getPayload();
   const { email, picture, given_name, family_name } = googlePayload;
   const existingUser = await db.users.findOne({ email });
-  if (existingUser) {
-    console.log('user exits');
-  } else {
-    const newUser = {
-      email,
-      firstName: given_name,
-      lastName: family_name,
-      picture: existingUser.picture ?? picture,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-    await db.users.insertOne(newUser);
-    console.log('no user');
-  }
+
+  const newUser = {
+    email,
+    firstName: given_name,
+    lastName: family_name,
+    picture: existingUser.picture ?? picture,
+    accountType: 'Học viên',
+    createdAt: new Date(),
+    updatedAt: new Date()
+  };
+  await db.users.insertOne(newUser);
+
   const user = await db.users.findOne({ email });
-  console.log(user);
+
   const payload = {
     id: user._id,
     email: user.email,
     fullname: user.firstName + user.lastName
   };
-  console.log(payload);
+
   const SECRET_KEY = process.env.SECRET_KEY;
 
   const token = jwt.sign(payload, SECRET_KEY, {
