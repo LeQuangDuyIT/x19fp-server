@@ -15,6 +15,7 @@ const connectToDatabase = async () => {
     // Collections
     db.collections = database.collection('collections');
     db.users = database.collection('users');
+    db.tests = database.collection('tests');
     db.questions = database.collection('questions');
   } catch (error) {
     console.error('Connect to DB failed:', error);

@@ -13,6 +13,8 @@ router.post(
   QuestionController.createMultipleChoice
 );
 
+router.post('/inital', authMiddleware, QuestionController.initalQuestion);
+
 router.get('/mine', authMiddleware, QuestionController.getMyQuestions);
 
 router.get('/:id', QuestionController.getQuestionById);

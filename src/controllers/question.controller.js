@@ -1,6 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import { ObjectId } from 'mongodb';
 import { db } from '../config/database.js';
+import { v4 as uuidv4 } from 'uuid';
 
 const createMultipleChoice = asyncHandler(async (req, res) => {
   const user = req.user;
@@ -33,6 +34,35 @@ const createMultipleChoice = asyncHandler(async (req, res) => {
   res.status(201).json({ id: newQuestion._id });
 });
 
+const initalQuestion = asyncHandler(async (req, res) => {
+  const user = req.user;
+
+  const initialAnswers = Array.from({ length: 4 }, () => ({
+    id: uuidv4(),
+    content: '',
+    isCorrect: false
+  }));
+
+  const newQuestion = {
+    _id: new ObjectId(),
+    userId: user.id,
+    type: 'multiple-choice',
+    topic: '',
+    answers: initialAnswers,
+    subject: null,
+    collection: null,
+    isPrivate: true,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  };
+
+  await db.questions.insertOne(newQuestion);
+
+  const createdQuestion = await db.questions.findOne({ _id: newQuestion._id });
+
+  res.status(201).json({ data: createdQuestion });
+});
+
 const getQuestionById = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
@@ -56,6 +86,7 @@ const getMyQuestions = asyncHandler(async (req, res) => {
 
 const QuestionController = {
   createMultipleChoice,
+  initalQuestion,
   getQuestionById,
   getMyQuestions
 };

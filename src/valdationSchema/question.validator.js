@@ -11,7 +11,7 @@ const createQuestionSchema = yup.object().shape({
   answers: yup.array().of(multipleChoiceAnswerSchema).min(2).optional(),
   type: yup.string().required(),
   subject: yup.string().required(),
-  collection: yup.mixed().nullable().required(),
+  collection: yup.mixed().nullable(),
   isPrivate: yup.boolean().required()
 });
 
