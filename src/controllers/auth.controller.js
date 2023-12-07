@@ -51,7 +51,6 @@ const signup = asyncHandler(async (req, res) => {
 
 const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body || {};
-  console.log('user', email, password);
   // 1. Check email
   const existingUser = await db.users.findOne({ email });
   if (!existingUser) {
