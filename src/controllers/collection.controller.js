@@ -27,9 +27,10 @@ const getMyCollections = asyncHandler(async (req, res) => {
   res.json({ data: collections });
 });
 
+
 const CollectionController = {
   create,
-  getMyCollections
+  getMyCollections,
 };
 
 export default CollectionController;
