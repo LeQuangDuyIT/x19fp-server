@@ -102,6 +102,7 @@ const verifyGoogleAccount = asyncHandler(async (req, res) => {
     lastName: family_name,
     picture: existingUser.picture ?? picture,
     accountType: 'Học viên',
+    thirdparty: true,
     createdAt: new Date(),
     updatedAt: new Date()
   };
