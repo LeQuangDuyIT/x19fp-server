@@ -33,10 +33,10 @@ const create = asyncHandler(async (req, res) => {
     title: '',
     description: '',
     subject: null,
-    limitTime: null,
+    grade: null,
     createdAt: new Date(),
     updatedAt: new Date(),
-    questions: [newMultipleChoiceQuestion._id]
+    questions: [{ id: newMultipleChoiceQuestion._id, score: null }]
   };
 
   await db.tests.insertOne(newTest);
@@ -53,8 +53,26 @@ const getTestById = asyncHandler(async (req, res) => {
     throw new Error('Không tìm thấy bài thi/kiểm tra');
   }
 
-  const ObjectIdArray = existingTest.questions.map(id => new ObjectId(id));
-  const questions = await db.questions.find({ _id: { $in: ObjectIdArray } }).toArray();
+  const ObjectIdArray = existingTest.questions.map(question => new ObjectId(question.id));
+
+  // Tạo đối tượng idMap
+  const idMap = {};
+  ObjectIdArray.forEach((id, index) => {
+    idMap[id.toString()] = index;
+  });
+
+  // Lấy các câu hỏi từ cơ sở dữ liệu và duy trì thứ tự
+  let questions = await Promise.all(ObjectIdArray.map(id => db.questions.findOne({ _id: id })));
+
+  // Sắp xếp lại mảng questions theo thứ tự của ObjectIdArray
+  questions.sort((a, b) => idMap[a._id.toString()] - idMap[b._id.toString()]);
+
+  // Gán điểm số từ existingTest.questions vào questions
+  questions = questions.map((question, index) => ({
+    ...question,
+    score: existingTest.questions[index].score
+  }));
+
   const testContent = { ...existingTest, questions };
 
   res.json({ data: testContent });
