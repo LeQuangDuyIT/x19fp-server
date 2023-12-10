@@ -96,20 +96,21 @@ const verifyGoogleAccount = asyncHandler(async (req, res) => {
   const { email, picture, given_name, family_name } = googlePayload;
   const existingUser = await db.users.findOne({ email });
 
-  const newUser = {
-    email,
-    firstName: given_name,
-    lastName: family_name,
-    picture: existingUser.picture ?? picture,
-    accountType: 'Học viên',
-    thirdparty: true,
-    createdAt: new Date(),
-    updatedAt: new Date()
-  };
-  await db.users.insertOne(newUser);
-
+  if (existingUser) {
+  } else {
+    const newUser = {
+      email,
+      firstName: given_name,
+      lastName: family_name,
+      picture: picture,
+      accountType: 'Học viên',
+      thirdparty: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    await db.users.insertOne(newUser);
+  }
   const user = await db.users.findOne({ email });
-
   const payload = {
     id: user._id,
     email: user.email,
