@@ -36,7 +36,8 @@ const create = asyncHandler(async (req, res) => {
     grade: null,
     createdAt: new Date(),
     updatedAt: new Date(),
-    questions: [{ id: newMultipleChoiceQuestion._id, score: null }]
+    questions: [{ id: newMultipleChoiceQuestion._id, score: null }],
+    isActived: false
   };
 
   await db.tests.insertOne(newTest);
@@ -125,11 +126,46 @@ const deleteTestById = asyncHandler(async (req, res) => {
   res.json({ message: 'Xóa thành công', isDeleted: true });
 });
 
+const getMyTests = asyncHandler(async (req, res) => {
+  const user = req.user;
+
+  const tests = await db.tests.find({ userId: user.id }).toArray();
+
+  res.json({ data: tests });
+});
+
+const updateCommonField = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const updatedFields = req.body;
+  console.log(updatedFields);
+
+  const existingTest = await db.tests.findOne({ _id: new ObjectId(id) });
+  if (!existingTest) {
+    res.status(400);
+    throw new Error('Không tìm thấy đề');
+  }
+
+  // const updatedTest = { ...existingTest, ...updatedFields, updatedAt: new Date() };
+  // await db.tests.updateOne({ _id: new ObjectId(id) }, { $set: updatedTest });
+
+  for (let i = 0; i < existingTest.questions.length; i++) {
+    const questionId = existingTest.questions[i].id;
+    const existingQuestion = await db.questions.findOne({ _id: new ObjectId(questionId) });
+    console.log(existingQuestion);
+    const updatedQuestion = { ...existingQuestion, ...updatedFields, updatedAt: new Date() };
+    await db.questions.updateOne({ _id: new ObjectId(questionId) }, { $set: updatedQuestion });
+  }
+
+  res.json({ message: 'Cập nhật thành công' });
+});
+
 const TestController = {
   create,
   getTestById,
   updateTest,
-  deleteTestById
+  deleteTestById,
+  getMyTests,
+  updateCommonField
 };
 
 export default TestController;
