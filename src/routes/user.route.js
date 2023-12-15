@@ -5,6 +5,6 @@ import authMiddleware from '../middlewares/auth.mdw.js';
 const router = express.Router();
 
 router.get('/get-all-user', authMiddleware, user.getAllUser);
-router.delete('/delete-user', authMiddleware, user.deleteUser);
+router.delete('/delete-user/:id', authMiddleware, user.deleteUser);
 
 export default router;

@@ -16,13 +16,25 @@ const getAllUser = asyncHandler(async (req, res) => {
 
 const deleteUser = asyncHandler(async (req, res) => {
   try {
-    const { id } = req.body;
-    const existingUser = await db.users.findOne({ _id: new ObjectId(id) });
-    if (!existingUser) {
-      return res.status(400).json({ message: 'Không tìm thấy tài khoản ' });
+    const idStringList = req.params.id;
+    const idArrayList = idStringList.split(',');
+    const getAll = await db.users.find().toArray();
+    console.log(getAll[5]._id);
+    for (let i = 0; i < idArrayList.length; i++) {
+      const idArrayListElement = idArrayList[i];
+      console.log(idArrayListElement);
+      const existingUser = getAll.filter(user => user._id === idArrayListElement);
+      console.log(existingUser);
+      if (!existingUser) {
+        return res.status(400).json({ message: 'Không tìm thấy tài khoản ' });
+      }
+      // for (let j = 0; j < array.length; j++) {
+      //   const element = array[j];
+
+      // }
     }
 
-    await db.users.deleteOne({ _id: new ObjectId(id) });
+    // await db.users.deleteOne({ _id: new ObjectId(id) });
     res.status(200).json({
       message: 'Xóa tài khoản thành công'
     });
