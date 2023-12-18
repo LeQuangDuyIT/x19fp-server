@@ -98,12 +98,43 @@ const deleteQuestionById = asyncHandler(async (req, res) => {
   res.json({ message: 'Xóa thành công', isDeleted: true });
 });
 
+const updateQuestion = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const payload = req.body;
+  const user = req.user;
+
+  const { _id, userId, createdAt, ...rest } = payload;
+
+  if (user.id !== userId) {
+    res.status(400);
+    throw new Error('Người dùng không hợp lệ');
+  }
+
+  if (_id !== id) {
+    res.status(400);
+    throw new Error('Dữ liệu gửi lên không hợp lệ');
+  }
+
+  const existingQuestion = await db.questions.findOne({ _id: new ObjectId(id) });
+  if (!existingQuestion) {
+    res.status(400);
+    throw new Error('Không tìm thấy câu hỏi/bài tập');
+  }
+
+  const updatedFields = { ...existingQuestion, ...rest, updatedAt: new Date() };
+
+  await db.questions.updateOne({ _id: new ObjectId(id) }, { $set: updatedFields });
+
+  res.json({ message: 'Update dish successfully', data: updatedFields, isSuccess: true });
+});
+
 const QuestionController = {
   createMultipleChoice,
   initalQuestion,
   getQuestionById,
   getMyQuestions,
-  deleteQuestionById
+  deleteQuestionById,
+  updateQuestion
 };
 
 export default QuestionController;

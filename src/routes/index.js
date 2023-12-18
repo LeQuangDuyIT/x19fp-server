@@ -5,6 +5,7 @@ import questionRouter from './question.route.js';
 import testRouter from './test.route.js';
 import userProfileRouter from './userProfile.roure.js';
 import userRouter from './user.route.js';
+import recordRouter from './record.route.js';
 
 const router = express.Router();
 
@@ -13,6 +14,5 @@ router.use('/collections', collectionRouter);
 router.use('/questions', questionRouter);
 router.use('/tests', testRouter);
 router.use('/user-profile', userProfileRouter);
-router.use('/admin', userRouter);
 
 export default router;
