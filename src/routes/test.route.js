@@ -11,6 +11,5 @@ router.get('/overview/:id', TestController.getTestOverviewById);
 router.put('/:id', authMiddleware, TestController.updateTest);
 router.delete('/:id', authMiddleware, TestController.deleteTestById);
 router.put('/common/:id', authMiddleware, TestController.updateCommonField);
-router.post('/do/:id', authMiddleware, TestController.doTest);
 
 export default router;
