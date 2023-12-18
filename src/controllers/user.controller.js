@@ -62,7 +62,7 @@ const getStaticsNumber = asyncHandler(async (req, res) => {
       {
         $group: {
           _id: { $month: '$createdAt' },
-          numberofusers: { $sum: 1 }
+          numberOfUsers: { $sum: 1 }
         }
       },
       {
@@ -77,49 +77,14 @@ const getStaticsNumber = asyncHandler(async (req, res) => {
         ...result,
         {
           month: item?._id,
-          numberofusers: item?.numberofusers
+          numberOfUsers: item?.numberOfUsers
         }
       ];
     });
 
-    console.log(result);
-    // console.log('getAllUsers', getAllUsers);
-    // const sortUserbyMonths = getAllUsers.filter(user => {
-    //   const date = new Date(user.createdAt);
-    //   const month = date.getMonth() + 1;
-    //   switch (month) {
-    //     case 1:
-    //       break;
-    //     case 2:
-    //       break;
-    //     case 3:
-    //       break;
-    //     case 4:
-    //       break;
-    //     case 5:
-    //       break;
-    //     case 6:
-    //       break;
-    //     case 7:
-    //       break;
-    //     case 8:
-    //       break;
-    //     case 9:
-    //       break;
-    //     case 10:
-    //       break;
-    //     case 11:
-    //       break;
-    //     case 12:
-    //       break;
-
-    //     default:
-    //       break;
-    //   }
-    // });
     res.status(200).json({
       data: {
-        result,
+        usersInMonths: result,
         users: getTotalUsers,
         collections: getTotalCollections,
         questions: getTotalQuestions,
