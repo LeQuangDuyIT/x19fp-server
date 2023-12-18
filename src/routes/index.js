@@ -14,5 +14,6 @@ router.use('/collections', collectionRouter);
 router.use('/questions', questionRouter);
 router.use('/tests', testRouter);
 router.use('/user-profile', userProfileRouter);
+router.use('/admin', userRouter);
 
 export default router;
