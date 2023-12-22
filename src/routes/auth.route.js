@@ -12,5 +12,6 @@ router.post('/login', validateMdw(AuthValidator.loginSchema), AuthController.log
 router.post('/signup', validateMdw(AuthValidator.signupSchema), AuthController.signup);
 router.post('/verify-google-account', AuthController.verifyGoogleAccount);
 router.get('/current-user', authMiddleware, AuthController.fetchCurrentUser);
+router.get('/find-user/:id', authMiddleware, AuthController.getUserByNameOrId);
 router.post('/verify-mail', sendVerifyMail);
 export default router;

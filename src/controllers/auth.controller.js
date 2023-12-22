@@ -149,11 +149,27 @@ const fetchCurrentUser = asyncHandler(async (req, res) => {
   res.json(currentUser);
 });
 
+const getUserByNameOrId = asyncHandler(async (req, res) => {
+  const { id } = req.params.id;
+  console.log(id);
+  // try {
+  //   res.status(200).json({
+  //     message: body
+  //   });
+  // } catch (error) {
+  //   res.status(500).json({
+  //     message: 'Tìm tài khoản không thành công',
+  //     errors: error
+  //   });
+  // }
+});
+
 const AuthController = {
   signup,
   login,
   verifyGoogleAccount,
-  fetchCurrentUser
+  fetchCurrentUser,
+  getUserByNameOrId
 };
 
 export default AuthController;
