@@ -58,8 +58,39 @@ const create = asyncHandler(async (req, res) => {
   res.json({ data: recordData });
 });
 
+const updateRecord = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const payload = req.body;
+  const user = req.user;
+
+  const { _id, userId, createdAt, ...rest } = payload;
+
+  if (user.id !== userId) {
+    res.status(400);
+    throw new Error('Người dùng không hợp lệ');
+  }
+
+  if (_id !== id) {
+    res.status(400);
+    throw new Error('Dữ liệu gửi lên không hợp lệ');
+  }
+
+  const existingRecord = await db.tests.findOne({ _id: new ObjectId(id) });
+  if (!existingRecord) {
+    res.status(400);
+    throw new Error('Không tìm thấy record');
+  }
+
+  const updatedFields = { ...existingRecord, ...rest, updatedAt: new Date() };
+
+  await db.tests.updateOne({ _id: new ObjectId(id) }, { $set: updatedFields });
+
+  res.json({ message: 'Update record successfully', data: updatedFields, isSuccess: true });
+});
+
 const RecordController = {
-  create
+  create,
+  updateRecord
 };
 
 export default RecordController;

@@ -13,6 +13,7 @@ router.use('/auth', authRouter);
 router.use('/collections', collectionRouter);
 router.use('/questions', questionRouter);
 router.use('/tests', testRouter);
+router.use('/records', recordRouter);
 router.use('/user-profile', userProfileRouter);
 router.use('/admin', userRouter);
 
