@@ -154,7 +154,6 @@ const getUserByNameOrId = asyncHandler(async (req, res) => {
   const user = decodeURIComponent(req.query.user);
   const checkValidId = user => {
     if (user.length === 24) {
-      console.log('case1', user);
       return user;
     }
   };
@@ -164,12 +163,12 @@ const getUserByNameOrId = asyncHandler(async (req, res) => {
       .find({ $or: [{ _id: new ObjectId(idValue) }, { lastName: user }] })
       .toArray();
     console.log(getuser);
+
     if (!getuser) {
-      res.status(500).json({
+      return res.status(500).json({
         message: 'Không tìm thấy tài khoản'
       });
     }
-
     res.status(200).json({
       result: getuser
     });
