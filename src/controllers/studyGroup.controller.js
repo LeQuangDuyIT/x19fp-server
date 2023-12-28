@@ -5,8 +5,8 @@ const getGroupByUser = asyncHandler(async (req, res) => {
   const user = req.user;
   try {
     const getByUser = await db.groups.find({ userId: user.id }).toArray();
-    const sortByTime = getByUser.sort(
-      (groupA, groupB) => new Date(groupA.createdAt) - new Date(groupB.createdAt)
+    const sortByTime = await getByUser.sort(
+      (groupA, groupB) => new Date(groupB.createdAt) - new Date(groupA.createdAt)
     );
     res.status(200).json({
       data: sortByTime
