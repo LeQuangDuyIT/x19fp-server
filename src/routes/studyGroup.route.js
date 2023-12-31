@@ -6,5 +6,6 @@ const router = express.Router();
 
 router.post('/create-study-group', authMiddleware, studyGroup.createGroup);
 router.get('/get-groups', authMiddleware, studyGroup.getGroupByUser);
+router.post('/add-members/:id', authMiddleware, studyGroup.addMemberToGroup);
 
 export default router;

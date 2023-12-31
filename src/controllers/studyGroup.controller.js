@@ -1,4 +1,5 @@
 import asyncHandler from 'express-async-handler';
+import { ObjectId } from 'mongodb';
 import { db } from '../config/database.js';
 
 const getGroupByUser = asyncHandler(async (req, res) => {
@@ -31,6 +32,7 @@ const createGroup = asyncHandler(async (req, res) => {
     const newGroup = {
       userId: user.id,
       studyGroup,
+      member: [],
       createdAt: new Date(),
       updateAt: new Date()
     };
@@ -44,9 +46,41 @@ const createGroup = asyncHandler(async (req, res) => {
     });
   }
 });
+
+const addMemberToGroup = asyncHandler(async (req, res) => {
+  const memberList = req.body;
+  const groupId = req.params.id;
+
+  let exitUsers = [];
+
+  try {
+    for (let i = 0; i < memberList.length; i++) {
+      const memberListChild = memberList[i];
+      const existingGroup = await db.groups.findOne({ _id: new ObjectId(groupId) });
+      const hasduplicateUSer = existingGroup.member.find(user => user.id === memberListChild.id);
+      if (hasduplicateUSer) {
+        exitUsers.push(memberListChild);
+        continue;
+      } else {
+        await db.groups.findOneAndUpdate(
+          { _id: new ObjectId(groupId) },
+          { $push: { member: memberListChild } }
+        );
+      }
+    }
+    res.status(200).json({
+      duplicateUser: exitUsers
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error
+    });
+  }
+});
 const studyGroup = {
   createGroup,
-  getGroupByUser
+  getGroupByUser,
+  addMemberToGroup
 };
 
 export default studyGroup;

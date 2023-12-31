@@ -162,7 +162,6 @@ const getUserByNameOrId = asyncHandler(async (req, res) => {
     const getuser = await db.users
       .find({ $or: [{ _id: new ObjectId(idValue) }, { lastName: user }] })
       .toArray();
-    console.log(getuser);
 
     if (!getuser) {
       return res.status(500).json({
