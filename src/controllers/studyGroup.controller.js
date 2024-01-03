@@ -4,6 +4,7 @@ import { db } from '../config/database.js';
 
 const getGroupByUser = asyncHandler(async (req, res) => {
   const user = req.user;
+  console.log('user', user);
   try {
     const getByUser = await db.groups.find({ userId: user.id }).toArray();
     const sortByTime = await getByUser.sort(
@@ -77,10 +78,28 @@ const addMemberToGroup = asyncHandler(async (req, res) => {
     });
   }
 });
+
+const deleteGroup = asyncHandler(async (req, res) => {
+  const id = req.params.id;
+  try {
+    await db.groups.deleteOne({ _id: new ObjectId(id) });
+    res.status(200).json({
+      message: 'Xóa nhóm thành công'
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: 'Xóa nhóm thất bại',
+      error: error
+    });
+    console.log(error);
+  }
+});
+
 const studyGroup = {
   createGroup,
   getGroupByUser,
-  addMemberToGroup
+  addMemberToGroup,
+  deleteGroup
 };
 
 export default studyGroup;
