@@ -159,9 +159,20 @@ const getUserByNameOrId = asyncHandler(async (req, res) => {
   };
   const idValue = checkValidId(user);
   try {
-    const getuser = await db.users
-      .find({ $or: [{ _id: new ObjectId(idValue) }, { lastName: user }] })
-      .toArray();
+    let getuser;
+    console.log({ $regex: `.*${user}.*` });
+    if (checkValidId) {
+      getuser = await db.users
+        .find({
+          _id: new ObjectId(idValue)
+        })
+        .toArray();
+    } else {
+      getuser = await db.users
+        .find({ lastName: { $regex: `.*${user}.*`, $options: 'i' } })
+        .toArray();
+    }
+    console.log(getuser);
 
     if (!getuser) {
       return res.status(500).json({
@@ -172,6 +183,7 @@ const getUserByNameOrId = asyncHandler(async (req, res) => {
       result: getuser
     });
   } catch (error) {
+    console.log(error);
     res.status(500).json({
       message: 'Tìm tài khoản thất bại',
       errors: error
