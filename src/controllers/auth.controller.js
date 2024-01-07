@@ -161,7 +161,7 @@ const getUserByNameOrId = asyncHandler(async (req, res) => {
   try {
     let getuser;
     console.log({ $regex: `.*${user}.*` });
-    if (checkValidId) {
+    if (idValue) {
       getuser = await db.users
         .find({
           _id: new ObjectId(idValue)
