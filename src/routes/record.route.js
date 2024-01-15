@@ -6,5 +6,6 @@ const router = express.Router();
 
 router.post('/', authMiddleware, RecordController.create);
 router.put('/:id', authMiddleware, RecordController.updateRecord);
+router.get('/test/:id', authMiddleware, RecordController.getRecordByTestId);
 
 export default router;
