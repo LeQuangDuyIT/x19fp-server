@@ -151,6 +151,7 @@ const fetchCurrentUser = asyncHandler(async (req, res) => {
 });
 
 const getUserByNameOrId = asyncHandler(async (req, res) => {
+  const limit = req.query.limit;
   const user = decodeURIComponent(req.query.user);
   const checkValidId = user => {
     if (user.length === 24) {
@@ -160,19 +161,19 @@ const getUserByNameOrId = asyncHandler(async (req, res) => {
   const idValue = checkValidId(user);
   try {
     let getuser;
-    console.log({ $regex: `.*${user}.*` });
     if (idValue) {
       getuser = await db.users
         .find({
           _id: new ObjectId(idValue)
         })
+        .limit(+limit)
         .toArray();
     } else {
       getuser = await db.users
         .find({ lastName: { $regex: `.*${user}.*`, $options: 'i' } })
+        .limit(+limit)
         .toArray();
     }
-    console.log(getuser);
 
     if (!getuser) {
       return res.status(500).json({

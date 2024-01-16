@@ -17,6 +17,6 @@ router.use('/tests', testRouter);
 router.use('/user-profile', userProfileRouter);
 router.use('/admin', userRouter);
 router.use('/group', studyGroupRouter);
-router.use('/home', homeSearchRouter);
+router.use('/homeSearch', homeSearchRouter);
 
 export default router;
