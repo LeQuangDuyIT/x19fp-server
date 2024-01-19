@@ -49,6 +49,8 @@ const create = asyncHandler(async (req, res) => {
     _id: new ObjectId(),
     questions,
     userId: user.id,
+    userFullname: user.fullname,
+    userEmail: user.email,
     createdAt: new Date(),
     updatedAt: new Date()
   };
@@ -58,8 +60,77 @@ const create = asyncHandler(async (req, res) => {
   res.json({ data: recordData });
 });
 
+const updateRecord = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const payload = req.body;
+  const user = req.user;
+
+  const { _id, userId, createdAt, ...rest } = payload;
+
+  if (user.id !== userId) {
+    res.status(400);
+    throw new Error('Người dùng không hợp lệ');
+  }
+
+  if (_id !== id) {
+    res.status(400);
+    throw new Error('Dữ liệu gửi lên không hợp lệ');
+  }
+
+  const existingRecord = await db.records.findOne({ _id: new ObjectId(id) });
+  if (!existingRecord) {
+    res.status(400);
+    throw new Error('Không tìm thấy record');
+  }
+
+  let totalScore = 0;
+  const { studentAnswers } = payload;
+  for (const question of studentAnswers) {
+    const questionData = await db.questions.findOne({ _id: new ObjectId(question.id) });
+    console.log(questionData);
+    const answerData = questionData.answers.find(answer => answer.id === question.answer.id);
+    if (answerData.isCorrect) {
+      totalScore += question.score;
+    }
+  }
+
+  const updatedFields = {
+    ...existingRecord,
+    ...rest,
+    totalScore,
+    isPassed: totalScore >= payload.passScore,
+    updatedAt: new Date()
+  };
+
+  await db.records.updateOne({ _id: new ObjectId(id) }, { $set: updatedFields });
+
+  res.json({ message: 'Update record successfully', data: updatedFields, isSuccess: true });
+});
+
+const getRecordByTestId = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const user = req.user;
+
+  const existingTest = await db.tests.findOne({ _id: new ObjectId(id) });
+  if (!existingTest) {
+    res.status(400);
+    throw new Error('Không tìm thấy đề thi');
+  }
+
+  if (existingTest.userId !== user.id) {
+    res.status(400);
+    throw new Error('Người dùng không hợp lệ');
+  }
+
+  const records = await db.records.find({ testId: id }).toArray();
+
+  res.json({ data: records });
+});
+
 const RecordController = {
-  create
+  create,
+  updateRecord,
+  getRecordByTestId
 };
 
 export default RecordController;

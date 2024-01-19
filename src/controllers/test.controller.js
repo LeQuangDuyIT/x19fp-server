@@ -123,7 +123,7 @@ const updateTest = asyncHandler(async (req, res) => {
 
   await db.tests.updateOne({ _id: new ObjectId(id) }, { $set: updatedFields });
 
-  res.json({ message: 'Update dish successfully', data: updatedFields, isSuccess: true });
+  res.json({ message: 'Update test successfully', data: updatedFields, isSuccess: true });
 });
 
 const deleteTestById = asyncHandler(async (req, res) => {
