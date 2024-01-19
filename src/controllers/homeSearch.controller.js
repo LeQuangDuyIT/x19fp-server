@@ -24,7 +24,7 @@ const homeSearch = asyncHandler(async (req, res) => {
         isPrivate: false
       })
       .toArray();
-    if (searchQuestions !== []) {
+    if (searchQuestions.length !== 0) {
       return res.status(200).json({
         objSearch: 'question',
         result: searchQuestions
@@ -38,7 +38,7 @@ const homeSearch = asyncHandler(async (req, res) => {
       })
       .toArray();
 
-    if (searchTests !== []) {
+    if (searchTests.length !== 0) {
       return res.status(200).json({
         objSearch: 'test',
         result: searchTests
