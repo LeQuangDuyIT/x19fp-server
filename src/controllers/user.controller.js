@@ -32,9 +32,7 @@ const deleteUser = asyncHandler(async (req, res) => {
     const getAll = await db.users.find().toArray();
     for (let i = 0; i < idArrayList.length; i++) {
       const idArrayListElement = idArrayList[i];
-      console.log(idArrayListElement);
       const existingUser = getAll.filter(user => user._id.toString() === idArrayListElement);
-      console.log(existingUser);
       if (!existingUser) {
         return res.status(400).json({ message: 'Không tìm thấy tài khoản ' });
       }

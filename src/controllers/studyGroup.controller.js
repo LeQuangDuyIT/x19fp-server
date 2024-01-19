@@ -4,7 +4,6 @@ import { db } from '../config/database.js';
 
 const getGroupByUser = asyncHandler(async (req, res) => {
   const user = req.user;
-  console.log('user', user);
   try {
     const getByUser = await db.groups.find({ userId: user.id }).toArray();
     const sortByTime = await getByUser.sort(

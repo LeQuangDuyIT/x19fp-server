@@ -154,7 +154,7 @@ const getUserByNameOrId = asyncHandler(async (req, res) => {
   const limit = req.query.limit;
   const user = decodeURIComponent(req.query.user);
   const checkValidId = user => {
-    if (user.length === 24) {
+    if (user.length === 24 && /^[a-f0-9]{24}$/) {
       return user;
     }
   };
