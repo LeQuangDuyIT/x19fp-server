@@ -4,6 +4,7 @@ import asyncHandler from 'express-async-handler';
 import { ObjectId } from 'mongodb';
 import { db } from '../config/database.js';
 import { OAuth2Client } from 'google-auth-library';
+import user from './user.controller.js';
 
 const signup = asyncHandler(async (req, res) => {
   const { email, password, firstName, lastName, phoneNumber, gender, accountType } = req.body;
@@ -149,11 +150,54 @@ const fetchCurrentUser = asyncHandler(async (req, res) => {
   res.json(currentUser);
 });
 
+const getUserByNameOrId = asyncHandler(async (req, res) => {
+  const limit = req.query.limit;
+  const user = decodeURIComponent(req.query.user);
+  const checkValidId = user => {
+    if (user.length === 24 && /^[a-f0-9]{24}$/) {
+      return user;
+    }
+  };
+  const idValue = checkValidId(user);
+  try {
+    let getuser;
+    if (idValue) {
+      getuser = await db.users
+        .find({
+          _id: new ObjectId(idValue)
+        })
+        .limit(+limit)
+        .toArray();
+    } else {
+      getuser = await db.users
+        .find({ lastName: { $regex: `.*${user}.*`, $options: 'i' } })
+        .limit(+limit)
+        .toArray();
+    }
+
+    if (!getuser) {
+      return res.status(500).json({
+        message: 'Không tìm thấy tài khoản'
+      });
+    }
+    res.status(200).json({
+      result: getuser
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: 'Tìm tài khoản thất bại',
+      errors: error
+    });
+  }
+});
+
 const AuthController = {
   signup,
   login,
   verifyGoogleAccount,
-  fetchCurrentUser
+  fetchCurrentUser,
+  getUserByNameOrId
 };
 
 export default AuthController;

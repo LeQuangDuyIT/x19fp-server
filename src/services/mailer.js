@@ -14,7 +14,7 @@ const sendVerificationMail = async receiverMail => {
     }
   });
   const options = {
-    from: `x19fp,<${adminUser}>`,
+    from: `x19fp,<TestBank>`,
     to: receiverMail,
     subject: 'Sign Up Verification ',
     html: `<p>Xin chào, ${receiverMail}, Đây là mã xác nhận của bạn: <b> ${verificationCode}</b> </p> <p>  Lưu ý mã xác nhận sẽ hết hạn sau <b> 3 phút </b> </p> ` // html body
