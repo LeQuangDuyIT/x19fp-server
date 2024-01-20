@@ -84,6 +84,7 @@ const updateRecord = asyncHandler(async (req, res) => {
   }
 
   let totalScore = 0;
+  let correct = 0;
   const { studentAnswers } = payload;
   for (const question of studentAnswers) {
     const questionData = await db.questions.findOne({ _id: new ObjectId(question.id) });
@@ -91,6 +92,7 @@ const updateRecord = asyncHandler(async (req, res) => {
     const answerData = questionData.answers.find(answer => answer.id === question.answer.id);
     if (answerData.isCorrect) {
       totalScore += question.score;
+      correct += 1;
     }
   }
 
@@ -98,6 +100,7 @@ const updateRecord = asyncHandler(async (req, res) => {
     ...existingRecord,
     ...rest,
     totalScore,
+    correct,
     isPassed: totalScore >= payload.passScore,
     updatedAt: new Date()
   };
