@@ -10,9 +10,9 @@ const questionSchema = yup.object().shape({
   topic: yup.string().required(),
   answers: yup.array().of(multipleChoiceAnswerSchema).min(2).optional(),
   type: yup.string().required(),
-  subject: yup.string().required(),
+  subject: yup.string().nullable(),
   collection: yup.mixed().nullable(),
-  isPrivate: yup.boolean().required()
+  isPrivate: yup.boolean()
 });
 
 const QuestionValidator = {

@@ -130,10 +130,30 @@ const getRecordByTestId = asyncHandler(async (req, res) => {
   res.json({ data: records });
 });
 
+const getRecordById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { pw } = req.body;
+
+  const existingRecord = await db.records.findOne({ _id: new ObjectId(id) });
+
+  if (!existingRecord) {
+    res.status(400);
+    throw new Error('Không tìm thấy bài làm');
+  }
+
+  if (existingRecord.passWord !== pw) {
+    res.status(400);
+    throw new Error('Mã truy cập không đúng');
+  }
+
+  res.json({ data: existingRecord });
+});
+
 const RecordController = {
   create,
   updateRecord,
-  getRecordByTestId
+  getRecordByTestId,
+  getRecordById
 };
 
 export default RecordController;
