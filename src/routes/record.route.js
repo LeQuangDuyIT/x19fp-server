@@ -7,5 +7,6 @@ const router = express.Router();
 router.post('/', authMiddleware, RecordController.create);
 router.put('/:id', authMiddleware, RecordController.updateRecord);
 router.get('/test/:id', authMiddleware, RecordController.getRecordByTestId);
+router.post('/:id', RecordController.getRecordById);
 
 export default router;
