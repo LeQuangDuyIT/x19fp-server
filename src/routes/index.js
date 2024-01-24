@@ -8,6 +8,7 @@ import userRouter from './user.route.js';
 import recordRouter from './record.route.js';
 import studyGroupRouter from './studyGroup.route.js';
 import homeSearchRouter from './homeSearch.route.js';
+import quizRoomRouter from './quizRoom.route.js';
 const router = express.Router();
 
 router.use('/auth', authRouter);
@@ -19,5 +20,6 @@ router.use('/user-profile', userProfileRouter);
 router.use('/admin', userRouter);
 router.use('/group', studyGroupRouter);
 router.use('/homeSearch', homeSearchRouter);
+router.use('/quizRooms', quizRoomRouter);
 
 export default router;
