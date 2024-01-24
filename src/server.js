@@ -29,9 +29,21 @@ const io = new Server(expressServer, {
 });
 
 io.on('connection', socket => {
-  console.log(socket.id);
   socket.on('send-answer', answer => {
-    console.log(answer);
     socket.broadcast.emit('recevice-answer', answer);
+  });
+  socket.on('send-test-noti', testNoti => {
+    socket.broadcast.emit('recevice-testNoti', testNoti);
+    socket.join(testNoti.authorId);
+  });
+  socket.on('enter-room', room => {
+    socket.join(room.roomId);
+  });
+  socket.on('send-noti-testOwner', noti => {
+    io.to(noti.testOwnerId).emit('recevice-noti-testOwner', noti.message);
+    socket.leave(noti.testOwnerId);
+  });
+  socket.on('join-room', id => {
+    socket.join(id?.id);
   });
 });

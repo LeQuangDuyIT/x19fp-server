@@ -151,6 +151,18 @@ const getMyTests = asyncHandler(async (req, res) => {
   res.json({ data: tests });
 });
 
+const getActiveTests = asyncHandler(async (req, res) => {
+  const user = req.user;
+  const { id } = req.params;
+  try {
+    const get = await db.tests.find({ userId: id, isActived: true }).toArray();
+
+    res.status(200).json({ data: get });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 const updateCommonField = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const updatedFields = req.body;
@@ -184,6 +196,7 @@ const TestController = {
   getTestOverviewById,
   getMyTests,
   updateCommonField,
+  getActiveTests
 };
 
 export default TestController;
