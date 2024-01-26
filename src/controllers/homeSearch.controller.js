@@ -17,7 +17,11 @@ const homeSearch = asyncHandler(async (req, res) => {
     //     result: searchByName
     //   });
     // }
-
+    if (searchValue.length < 24) {
+      return res.status(500).json({
+        message: 'Không tìm thấy kết quả '
+      });
+    }
     const searchQuestions = await db.questions
       .find({
         _id: new ObjectId(searchValue),
