@@ -17,7 +17,8 @@ app.use(
     origin: [
       'https://x19fp-client.onrender.com',
       'https://x19fp-client-cx84.onrender.com',
-      'http://localhost:5173'
+      'http://localhost:5173',
+      'http://localhost:3001'
     ]
   })
 );
@@ -36,7 +37,8 @@ const io = new Server(expressServer, {
   cors: [
     'https://x19fp-client.onrender.com',
     'https://x19fp-client-cx84.onrender.com',
-    'http://localhost:5173'
+    'http://localhost:5173',
+    'http://localhost:3001'
   ]
 });
 
