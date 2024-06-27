@@ -12,7 +12,15 @@ const PORT = process.env.PORT;
 connectToDatabase();
 
 app.use(express.json());
-app.use(cors({ origin: ['https://x19fp-client.onrender.com', 'http://localhost:5173'] }));
+app.use(
+  cors({
+    origin: [
+      'https://x19fp-client.onrender.com',
+      'https://x19fp-client-cx84.onrender.com',
+      'http://localhost:5173'
+    ]
+  })
+);
 
 app.use(apiLoggerMiddleware);
 
@@ -25,7 +33,11 @@ const expressServer = app.listen(PORT, () => {
 });
 
 const io = new Server(expressServer, {
-  cors: ['https://x19fp-client.onrender.com', 'http://localhost:5173']
+  cors: [
+    'https://x19fp-client.onrender.com',
+    'https://x19fp-client-cx84.onrender.com',
+    'http://localhost:5173'
+  ]
 });
 
 io.on('connection', socket => {
