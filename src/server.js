@@ -12,17 +12,18 @@ const PORT = process.env.PORT;
 connectToDatabase();
 
 app.use(express.json());
-app.use(
-  cors({
-    origin: [
-      'https://x19fp-client.onrender.com',
-      'https://x19fp-client-cx84.onrender.com',
-      'http://localhost:5173',
-      'https://x19fp-server.onrender.com',
-      'http://localhost:3001'
-    ]
-  })
-);
+app.use(cors('*'));
+// app.use(
+//   cors({
+//     origin: [
+//       'https://x19fp-client.onrender.com',
+//       'https://x19fp-client-cx84.onrender.com',
+//       'http://localhost:5173',
+//       'https://x19fp-server.onrender.com',
+//       'http://localhost:3001'
+//     ]
+//   })
+// );
 
 app.use(apiLoggerMiddleware);
 
@@ -35,14 +36,17 @@ const expressServer = app.listen(PORT, () => {
 });
 
 const io = new Server(expressServer, {
-  cors: [
-    'https://x19fp-client.onrender.com',
-    'https://x19fp-client-cx84.onrender.com',
-    'https://x19fp-server.onrender.com',
-    'http://localhost:5173',
-    'http://localhost:3001'
-  ]
+  cors: '*'
 });
+// const io = new Server(expressServer, {
+//   cors: [
+//     'https://x19fp-client.onrender.com',
+//     'https://x19fp-client-cx84.onrender.com',
+//     'https://x19fp-server.onrender.com',
+//     'http://localhost:5173',
+//     'http://localhost:3001'
+//   ]
+// });
 
 io.on('connection', socket => {
   socket.on('send-answer', answer => {
