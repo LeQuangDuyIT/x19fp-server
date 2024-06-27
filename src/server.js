@@ -28,7 +28,11 @@ app.use(cors('*'));
 app.use(apiLoggerMiddleware);
 
 app.use('/api/v1', appRouter);
-
+app.get('/api/v1/test', (req, res) => {
+  res.status(200).json({
+    message: 'api go here'
+  });
+});
 app.use(handleErrorMiddleware);
 
 const expressServer = app.listen(PORT, () => {

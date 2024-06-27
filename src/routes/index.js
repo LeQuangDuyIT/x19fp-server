@@ -21,9 +21,5 @@ router.use('/admin', userRouter);
 router.use('/group', studyGroupRouter);
 router.use('/homeSearch', homeSearchRouter);
 router.use('/quizRooms', quizRoomRouter);
-router.get('/test', (req, res) => {
-  res.status(200).json({
-    message: 'api go here'
-  });
-});
+
 export default router;
